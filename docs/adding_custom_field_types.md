@@ -56,4 +56,24 @@ Since we want to display an image, we can change it to:
 You can customize the other generated partials in the same way
 for custom behavior on the index and form pages.
 
+## Using your custom field
+
+We need to tell Administrate which attributes we'd like to be displayed as a
+gravatar image.
+
+Open up a dashboard file, and add the gravatar field into the `ATTRIBUTE_TYPES`
+hash. It should look something like:
+
+```ruby
+class UserDashboard < Administrate::BaseDashboard
+  ATTRIBUTE_TYPES = {
+    created_at: Field::DateTime,
+    updated_at: Field::DateTime,
+    name: Field::String,
+    email: GravatarField,    # Update this email to use your new field class
+    # ...
+  }
+end
+```
+
 [Customizing Attribute Partials]: /customizing_attribute_partials
