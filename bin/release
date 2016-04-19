@@ -2,18 +2,26 @@
 set -e
 
 VERSION=$(ruby -r ./lib/administrate/version.rb -e "puts Administrate::VERSION")
+echo "building gem"
 gem build administrate.gemspec
-gem install administrate-$(VERSION).gem
+echo "installing gem package"
+gem install administrate-$VERSION.gem
 
+echo "using the new version of administrate in our Gemfile"
+sed -i.bak "s/^gemspec$/gem \"administrate\", \"$VERSION\"/" Gemfile
+rm Gemfile.bak
+echo "bundling"
+bundle check || bundle install
+appraisal install
 
-GEMFILE=$(cat Gemfile | sed "s/^gemspec$/gem \"administrate\", \"$VERSION\"/")
-echo $GEMFILE > Gemfile
-bundle
-
+echo "running rake"
 bundle exec rake
+echo "running appraisals"
 bundle exec appraisal rake
 
+echo "uninstalling"
 gem uninstall administrate -v $VERSION
+echo "pushing"
 gem push administrate-$VERSION.gem
 
 bundle
