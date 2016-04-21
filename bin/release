@@ -29,3 +29,6 @@ bundle exec rake
 bundle exec appraisal rake
 
 echo "Administrate version $VERSION was released successfully."
+
+git tag v$VERSION
+git push --tags
